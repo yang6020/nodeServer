@@ -1,19 +1,30 @@
 const http = require('http');
 const url = require('url');
+const StringDecoder = require('string_decoder').StringDecoder;
 
 const server = http.createServer((req, res) => {
-  // res.end('hello world');
-  let parsedUrl = url.parse(req.url, true);
-  let path = parsedUrl.pathname;
-  let trimmedPath = path.replace(/^\/+|\/+$/g, '');
-  const queryStringObject = parsedUrl.query;
+  let decoder = new StringDecoder('utf8');
+  let buffer = '';
+  let headers = req.headers;
+  req.on('data', data => {
+    buffer += decoder.write(data);
+  });
+  req.on('end', () => {
+    buffer += decoder.end();
 
-  let method = req.method.toLowerCase();
-  res.end('Hello World\n');
-  console.log(
-    'Request received on path ' + trimmedPath + ' method is ' + method,
-    queryStringObject,
-  );
+    let parsedUrl = url.parse(req.url, true);
+    let path = parsedUrl.pathname;
+    let trimmedPath = path.replace(/^\/+|\/+$/g, '');
+    const queryStringObject = parsedUrl.query;
+
+    let method = req.method.toLowerCase();
+    res.end('Hello World\n');
+    console.log(
+      'Request received on path ' + trimmedPath + ' method is ' + method,
+      queryStringObject,
+    );
+    console.log('buffer data is ' + buffer, headers);
+  });
 });
 
 server.listen(3000, () => {
