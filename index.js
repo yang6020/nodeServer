@@ -1,6 +1,7 @@
 const http = require('http');
 const url = require('url');
 const StringDecoder = require('string_decoder').StringDecoder;
+const config = require('./config');
 
 const server = http.createServer((req, res) => {
   let decoder = new StringDecoder('utf8');
@@ -32,6 +33,7 @@ const server = http.createServer((req, res) => {
       statusCode = typeof statusCode === 'number' ? statusCode : 200;
       payload = typeof payload === 'object' ? payload : {};
       var payloadString = JSON.stringify(payload);
+      res.setHeader('Content-Type', 'application/json');
       res.writeHead(statusCode);
       res.end(payloadString);
       console.log('returning this response ' + statusCode, payloadString);
@@ -39,8 +41,10 @@ const server = http.createServer((req, res) => {
   });
 });
 
-server.listen(3000, () => {
-  console.log('server is running on port ' + 3000);
+server.listen(config.port, () => {
+  console.log(
+    'server is running on port ' + config.port + ' in ' + config.envName,
+  );
 });
 
 const handlers = {};
