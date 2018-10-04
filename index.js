@@ -1,9 +1,22 @@
 const http = require('http');
+const https = require('https');
 const url = require('url');
 const StringDecoder = require('string_decoder').StringDecoder;
 const config = require('./config');
+const fs = require('fs');
+var serverOptions = {
+  key: fs.readFileSync('./https/key.pem'),
+  cert: fs.readFileSync('./https/cert.pem'),
+};
 
-const server = http.createServer((req, res) => {
+const httpServer = http.createServer((req, res) => {
+  unifiedServer(req, res);
+});
+const httpsServer = https.createServer(serverOptions, (req, res) => {
+  unifiedServer(req, res);
+});
+
+const unifiedServer = (req, res) => {
   let decoder = new StringDecoder('utf8');
   let buffer = '';
   let headers = req.headers;
@@ -39,11 +52,16 @@ const server = http.createServer((req, res) => {
       console.log('returning this response ' + statusCode, payloadString);
     });
   });
-});
+};
 
-server.listen(config.port, () => {
+httpServer.listen(config.httpPort, () => {
   console.log(
-    'server is running on port ' + config.port + ' in ' + config.envName,
+    'server is running on port ' + config.httpPort + ' in ' + config.envName,
+  );
+});
+httpsServer.listen(config.httpsPort, () => {
+  console.log(
+    'server is running on port ' + config.httpsPort + ' in ' + config.envName,
   );
 });
 
