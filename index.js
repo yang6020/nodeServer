@@ -8,17 +8,17 @@ const handlers = require('./lib/handlers');
 const _data = require('./lib/data');
 const helpers = require('./lib/helpers');
 
-var serverOptions = {
-  key: fs.readFileSync('./https/key.pem'),
-  cert: fs.readFileSync('./https/cert.pem'),
-};
+// var serverOptions = {
+//   key: fs.readFileSync('./https/key.pem'),
+//   cert: fs.readFileSync('./https/cert.pem'),
+// };
 
 const httpServer = http.createServer((req, res) => {
   unifiedServer(req, res);
 });
-const httpsServer = https.createServer(serverOptions, (req, res) => {
-  unifiedServer(req, res);
-});
+// const httpsServer = https.createServer(serverOptions, (req, res) => {
+//   unifiedServer(req, res);
+// });
 
 const unifiedServer = (req, res) => {
   let decoder = new StringDecoder('utf8');
@@ -65,11 +65,11 @@ httpServer.listen(config.httpPort, () => {
     'server is running on port ' + config.httpPort + ' in ' + config.envName,
   );
 });
-httpsServer.listen(config.httpsPort, () => {
-  console.log(
-    'server is running on port ' + config.httpsPort + ' in ' + config.envName,
-  );
-});
+// httpsServer.listen(config.httpsPort, () => {
+//   console.log(
+//     'server is running on port ' + config.httpsPort + ' in ' + config.envName,
+//   );
+// });
 
 const router = {
   ping: handlers.ping,
