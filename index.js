@@ -4,6 +4,35 @@ const url = require('url');
 const StringDecoder = require('string_decoder').StringDecoder;
 const config = require('./config');
 const fs = require('fs');
+const _data = require('./lib/data');
+
+//TESTING FUNCTIONS
+
+// create newFile with foo:bar
+// _data.create('test', 'newFile', { foo: 'bar' }, function(err) {
+//   console.log('this is the error', err);
+// });
+
+// read newFile
+// _data.read('test', 'newFile', function(err, data) {
+//   console.log('this is the error', err, 'and this was the data ', data);
+// });
+
+// edit newFile by replacing the contents
+// _data.update('test', 'newFile', { fizz: 'buzz' }, err => {
+//   console.log('this was the error', err);
+// });
+
+// delete newFile
+// _data.delete('test', 'newFile', err => {
+//   console.log('this was the error', err);
+// });
+
+// read a file that doesn't exist
+// _data.read('test', 'fileHere', function(err, data) {
+//   console.log('this is the error', err, 'and this was the data ', data);
+// });
+
 var serverOptions = {
   key: fs.readFileSync('./https/key.pem'),
   cert: fs.readFileSync('./https/cert.pem'),
