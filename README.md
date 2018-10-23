@@ -31,7 +31,7 @@ cd into node-server folder
 
     node index.js
 
-Use postman to hit port (3000 or 3001)
+Use postman to hit port: 3000 or 5000 (staging or production)
 
 ---
 
