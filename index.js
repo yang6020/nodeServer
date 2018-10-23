@@ -2,36 +2,11 @@ const http = require('http');
 const https = require('https');
 const url = require('url');
 const StringDecoder = require('string_decoder').StringDecoder;
-const config = require('./config');
+const config = require('./lib/config');
 const fs = require('fs');
+const handlers = require('./lib/handlers');
 const _data = require('./lib/data');
-
-//TESTING FUNCTIONS
-
-// create newFile with foo:bar
-// _data.create('test', 'newFile', { foo: 'bar' }, function(err) {
-//   console.log('this is the error', err);
-// });
-
-// read newFile
-// _data.read('test', 'newFile', function(err, data) {
-//   console.log('this is the error', err, 'and this was the data ', data);
-// });
-
-// edit newFile by replacing the contents
-// _data.update('test', 'newFile', { fizz: 'buzz' }, err => {
-//   console.log('this was the error', err);
-// });
-
-// delete newFile
-// _data.delete('test', 'newFile', err => {
-//   console.log('this was the error', err);
-// });
-
-// read a file that doesn't exist
-// _data.read('test', 'fileHere', function(err, data) {
-//   console.log('this is the error', err, 'and this was the data ', data);
-// });
+const helpers = require('./lib/helpers');
 
 var serverOptions = {
   key: fs.readFileSync('./https/key.pem'),
@@ -60,16 +35,18 @@ const unifiedServer = (req, res) => {
     let trimmedPath = path.replace(/^\/+|\/+$/g, '');
     const queryStringObject = parsedUrl.query;
     let method = req.method.toLowerCase();
-    var chosenHandler =
+
+    const chosenHandler =
       typeof router[trimmedPath] === 'undefined'
         ? handlers.notFound
         : router[trimmedPath];
+
     var data = {
       trimmedPath: trimmedPath,
       queryStringObject: queryStringObject,
       method: method,
       headers: headers,
-      payload: buffer,
+      payload: helpers.parseJsonToObject(buffer),
     };
     chosenHandler(data, (statusCode, payload) => {
       statusCode = typeof statusCode === 'number' ? statusCode : 200;
@@ -94,20 +71,34 @@ httpsServer.listen(config.httpsPort, () => {
   );
 });
 
-const handlers = {};
-handlers.sample = (data, cb) => {
-  console.log(data);
-  cb(200, { name: 'sampler handler' });
-};
-handlers.ping = (data, cb) => {
-  cb(200);
-};
-
-handlers.notFound = (data, cb) => {
-  cb(404);
-};
-
 const router = {
-  sample: handlers.sample,
   ping: handlers.ping,
+  users: handlers.users,
 };
+
+//TESTING FUNCTIONS
+
+// create newFile with foo:bar
+// _data.create('test', 'newFile', { foo: 'bar' }, function(err) {
+//   console.log('this is the error', err);
+// });
+
+// read newFile
+// _data.read('test', 'newFile', function(err, data) {
+//   console.log('this is the error', err, 'and this was the data ', data);
+// });
+
+// edit newFile by replacing the contents
+// _data.update('test', 'newFile', { fizz: 'buzz' }, err => {
+//   console.log('this was the error', err);
+// });
+
+// delete newFile
+// _data.delete('test', 'newFile', err => {
+//   console.log('this was the error', err);
+// });
+
+// read a file that doesn't exist
+// _data.read('test', 'fileHere', function(err, data) {
+//   console.log('this is the error', err, 'and this was the data ', data);
+// });
