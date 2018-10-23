@@ -4,6 +4,8 @@ A server built from scratch without using express.
 
 Follows an error-first-callback approach with proper errors on each level
 
+_all secrets and configs are also uploaded for testing purposes_
+
 #### Functionality:
 
 - Add users (POST):
@@ -17,35 +19,27 @@ Follows an error-first-callback approach with proper errors on each level
 
 ### Prerequisites
 
-Node
+#### Node
 
 ## Running the tests :
 
----
+git clone https://github.com/yang6020/nodeServer.git
 
 cd into node-server folder
 
-Start Server
-
-#### http :
+### Start Server
 
     node index.js
 
 Use postman to hit port (3000 or 3001)
 
-#### https:
-
-    NODE_ENV=production node index.js
-
-Use postman to hit port (5000 or 5001)
-
 ---
 
-On Postman:
+### On Postman:
 
 #### Post
 
-send a post request with body containing a user like:
+send a post request with body containing a user:
 
     {
     "firstName": "Justin",
@@ -56,7 +50,7 @@ send a post request with body containing a user like:
 
 #### Get
 
-send a get request (query by phone number) like:
+send a get request (query by phone number):
 
     localhost:3000/users?phone=0123456789
 
