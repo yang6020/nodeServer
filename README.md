@@ -45,6 +45,7 @@ send a post request with body containing a user:
     "firstName": "Justin",
     "lastName": "Yang",
     "phone": "0123456789",
+    "password": "thisIsAPassword
     "tosAgreement": true
     }
 
